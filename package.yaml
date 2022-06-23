@@ -1,0 +1,31 @@
+name:                connect-more
+version:             0.1.0.0
+synopsis:            Command line program that takes a Pokémon's name as input and returns some information about that Pokémon as the output//////////???????????
+category:            Game
+github:              neilshaabi/connect-more
+license:             BSD3
+author:              Neil Shaabi
+maintainer:          neil.shaabi@warwick.ac.uk
+copyright:           2022 Neil Shaabi
+description:         Please see the README on GitHub at <https://github.com/neilshaabi/connect-more#readme>
+extra-source-files:
+- README.md
+
+dependencies:
+- base >= 4.7 && < 5
+- gloss
+- containers
+
+library:
+  source-dirs: src
+
+executables:
+  connect-more-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - connect-more

@@ -1,0 +1,54 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           connect-more
+version:        0.1.0.0
+synopsis:       Command line program that takes a Pokémon's name as input and returns some information about that Pokémon as the output//////////???????????
+description:    Please see the README on GitHub at <https://github.com/neilshaabi/connect-more#readme>
+category:       Game
+homepage:       https://github.com/neilshaabi/connect-more#readme
+bug-reports:    https://github.com/neilshaabi/connect-more/issues
+author:         Neil Shaabi
+maintainer:     neil.shaabi@warwick.ac.uk
+copyright:      2022 Neil Shaabi
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/neilshaabi/connect-more
+
+library
+  exposed-modules:
+      Board
+      Config
+      Renders
+  other-modules:
+      Paths_connect_more
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , gloss
+  default-language: Haskell2010
+
+executable connect-more-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_connect_more
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , connect-more
+    , containers
+    , gloss
+  default-language: Haskell2010
