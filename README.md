@@ -24,7 +24,7 @@ Another desirable feature is the alternation of the starting players; if Red sta
 - s: settings
 - h: show/hide help menu
 - q: quit to main menu, reset score
-- numbers 1-number of columns: add piece to column
+- numbers 1-no. of columns: add piece to column
 - left arrow key: undo previous move
 - spacebar: start new game (with default settings if on main menu)
 
