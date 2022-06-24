@@ -1,6 +1,6 @@
 name:                connect-more
 version:             0.1.0.0
-synopsis:            Command line program that takes a Pokémon's name as input and returns some information about that Pokémon as the output//////////???????????
+synopsis:            Variation of the popular two-player board game Connect Four
 category:            Game
 github:              neilshaabi/connect-more
 license:             BSD3
