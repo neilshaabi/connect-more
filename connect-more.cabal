@@ -6,7 +6,7 @@ cabal-version: 1.12
 
 name:           connect-more
 version:        0.1.0.0
-synopsis:       Command line program that takes a Pokémon's name as input and returns some information about that Pokémon as the output//////////???????????
+synopsis:       Variation of the popular two-player board game, Connect Four
 description:    Please see the README on GitHub at <https://github.com/neilshaabi/connect-more#readme>
 category:       Game
 homepage:       https://github.com/neilshaabi/connect-more#readme
