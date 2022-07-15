@@ -8,8 +8,8 @@ import Data.Map (Map, (!))
 import Config
 import Board
 
--- Helper function for rendering text
--- Source: https://github.com/dixonary/hake
+-- | Helper function for rendering text
+--   Source: https://github.com/dixonary/hake
 text' :: Color -> Float -> Float -> String -> Picture
 text' col size boldness str =
     color col $
@@ -17,11 +17,11 @@ text' col size boldness str =
          | x <- [(-boldness),(0.5-boldness)..boldness],
            y <- [(-boldness),(0.5-boldness)..boldness] ]
 
--- x-coordinate for left-aligning text in setup/help menus
+-- | x-coordinate for left-aligning text in setup/help menus
 alignL :: Float
 alignL = -360
 
--- Render title screen with logo and text
+-- | Renders title screen with logo and text
 renderTitle :: [Picture]
 renderTitle = [
     translate (-35) 100 $ color (getColour Red) $ circleSolid 50,
@@ -32,7 +32,7 @@ renderTitle = [
     translate (-140) (-180) $ text' grey 20 0.8 "Press h to view help"
     ]
 
--- Render settings menu with board dimensions, pieces in a row to win and instructions
+-- | Renders settings menu with board dimensions, pieces in a row to win and instructions
 renderSettings :: Board -> Int -> Int -> Float -> [Picture]
 renderSettings Board{..} win maxWin rectY = [
     translate 0 rectY $ color (greyN 0.95) $ rectangleSolid 800 60, -- Rectangle indicating selected field
@@ -45,7 +45,7 @@ renderSettings Board{..} win maxWin rectY = [
     translate alignL (-160) $ text' grey 25 1 "Press space to start game"
     ]
 
--- Render help menu with gameplay instructions and controls
+-- | Renders help menu with gameplay instructions and controls
 renderHelp :: [Picture]
 renderHelp = [
     translate alignL 290    $ text' grey 40 1.2 "Help menu",
@@ -61,7 +61,7 @@ renderHelp = [
     translate alignL (-280) $ text' grey 20 0.8 "- h: show/hide help menu"
     ]
 
--- Render ongoing game with score, pieces to win, board, column numbers and current player
+-- | Renders ongoing game with score, pieces to win, board, column numbers and current player
 renderPlay :: Map Piece Int -> Int -> Board -> Piece -> [Picture]
 renderPlay score win board player = [
     renderScore score,
@@ -72,7 +72,7 @@ renderPlay score win board player = [
     translate 72 (-370) $ text' (getColour player) 22 0.8 $ show player
     ]
 
--- Render current score for each player, including number of draws
+-- | Renders current score for each player, including number of draws
 renderScore :: Map Piece Int -> Picture
 renderScore score = translate (-184) 350 $ text' grey 20 0.8 (
     "Draw: " ++ show (score ! None) ++ " | " ++
@@ -80,13 +80,13 @@ renderScore score = translate (-184) 350 $ text' grey 20 0.8 (
     "Blue: " ++ show (score ! Blue)
     )
 
--- Render current numbers of pieces in a row to win, with help instructions
+-- | Renders current numbers of pieces in a row to win, with help instructions
 renderGoal :: Int -> Picture
 renderGoal win = translate (-218) 300 $ text' grey 22 0.8 (
     "Connect " ++ show win ++ " (press h for help)")
 
--- Render board in the centre of the game window
--- Adapted from: https://github.com/dixonary/hake
+-- | Renders board in the centre of the game window
+--   Adapted from: https://github.com/dixonary/hake
 renderBoard :: Board -> Picture
 renderBoard board@Board{..} = pictures $ [renderPiece col row | col <- [1..cols], row <- [1..rows]]
     where
@@ -106,7 +106,7 @@ renderBoard board@Board{..} = pictures $ [renderPiece col row | col <- [1..cols]
                          -- Get the piece at the current position
                         piece = getPiece board (col,row)
 
--- Render column numbers below each column for player's reference
+-- | Renders column numbers below each column for player's reference
 renderColNums :: Board -> Picture
 renderColNums Board{..} = pictures $ [renderNumber col | col <- [1..cols]]
     where
@@ -117,7 +117,7 @@ renderColNums Board{..} = pictures $ [renderNumber col | col <- [1..cols]]
             in 
                 translate xPos (-320) $ text' grey 30 1 (show col)          -- Display column number
 
--- Render endgame screen with score, board, winning player and instructions
+-- | Renders endgame screen with score, board, winning player and instructions
 renderEndgame :: Map Piece Int -> Int -> Board -> Piece -> [Picture]
 renderEndgame score goal board winner = [
     translate 0 0 $ color (getBG winner) $ rectangleSolid 1000 1000, -- Change background colour depending on winner
@@ -128,7 +128,7 @@ renderEndgame score goal board winner = [
     translate (-163) (-370) $ text' grey 22 0.8 "Press space to restart"
     ]
 
--- Render text indicating winning player or draw
+-- | Renders text indicating winning player or draw
 renderWinner :: Piece -> Picture
 renderWinner None   = translate (-50) (-320) $ text' grey 30 1 "Draw!"
 renderWinner player = translate (-90) (-320) $ text' (getColour player) 30 1 (show player ++ " wins!")
