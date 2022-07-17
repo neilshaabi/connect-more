@@ -1,12 +1,11 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Renders where
-
 import Graphics.Gloss
 import Data.Map (Map, (!))
 
-import Config
 import Board
+import Config
 
 -- | Helper function for rendering text
 --   Source: https://github.com/dixonary/hake
@@ -61,7 +60,8 @@ renderHelp = [
     translate alignL (-280) $ text' grey 20 0.8 "- h: show/hide help menu"
     ]
 
--- | Renders ongoing game with score, pieces to win, board, column numbers and current player
+-- | Renders ongoing game with the score, pieces to win, board, column numbers 
+--   and the current player
 renderPlay :: Map Piece Int -> Int -> Board -> Piece -> [Picture]
 renderPlay score win board player = [
     renderScore score,
@@ -72,7 +72,7 @@ renderPlay score win board player = [
     translate 72 (-370) $ text' (getColour player) 22 0.8 $ show player
     ]
 
--- | Renders current score for each player, including number of draws
+-- | Renders the current score for each player, including the number of draws
 renderScore :: Map Piece Int -> Picture
 renderScore score = translate (-184) 350 $ text' grey 20 0.8 (
     "Draw: " ++ show (score ! None) ++ " | " ++
@@ -80,33 +80,33 @@ renderScore score = translate (-184) 350 $ text' grey 20 0.8 (
     "Blue: " ++ show (score ! Blue)
     )
 
--- | Renders current numbers of pieces in a row to win, with help instructions
+-- | Renders the current numbers of pieces in a row to win with help instructions
 renderGoal :: Int -> Picture
 renderGoal win = translate (-218) 300 $ text' grey 22 0.8 (
     "Connect " ++ show win ++ " (press h for help)")
 
--- | Renders board in the centre of the game window
+-- | Renders a @Board@ in the centre of the game window
 --   Adapted from: https://github.com/dixonary/hake
 renderBoard :: Board -> Picture
 renderBoard board@Board{..} = pictures $ [renderPiece col row | col <- [1..cols], row <- [1..rows]]
     where
         renderPiece col row =
             let
-                -- Midpoint of piece relative to board dimensions
+                -- Midpoint of the @Piece@ relative to the @Board@'s dimensions
                 xRel = fromIntegral (col - 1) - (fromIntegral cols - 1) / 2
                 yRel = fromIntegral (row - 1) - (fromIntegral rows - 1) / 2
 
-                -- Position based on distance from middle
+                -- Position based on the distance from the middle
                 xPos = xRel * xUnit cols
                 yPos = yRel * yUnit rows
             in
-                -- Display piece as circle in correct colour
+                -- Display piece as a circle in the correct colour
                 translate xPos yPos $ color (getColour piece) $ circleSolid (pieceRadius cols rows)
                     where
                          -- Get the piece at the current position
                         piece = getPiece board (col,row)
 
--- | Renders column numbers below each column for player's reference
+-- | Renders column numbers below each column for the player's reference
 renderColNums :: Board -> Picture
 renderColNums Board{..} = pictures $ [renderNumber col | col <- [1..cols]]
     where
@@ -117,7 +117,7 @@ renderColNums Board{..} = pictures $ [renderNumber col | col <- [1..cols]]
             in 
                 translate xPos (-320) $ text' grey 30 1 (show col)          -- Display column number
 
--- | Renders endgame screen with score, board, winning player and instructions
+-- | Renders the endgame screen with the score, board, winning player and instructions
 renderEndgame :: Map Piece Int -> Int -> Board -> Piece -> [Picture]
 renderEndgame score goal board winner = [
     translate 0 0 $ color (getBG winner) $ rectangleSolid 1000 1000, -- Change background colour depending on winner
@@ -128,7 +128,7 @@ renderEndgame score goal board winner = [
     translate (-163) (-370) $ text' grey 22 0.8 "Press space to restart"
     ]
 
--- | Renders text indicating winning player or draw
+-- | Renders text indicating the winning @Piece@ (or draw)
 renderWinner :: Piece -> Picture
 renderWinner None   = translate (-50) (-320) $ text' grey 30 1 "Draw!"
 renderWinner player = translate (-90) (-320) $ text' (getColour player) 30 1 (show player ++ " wins!")

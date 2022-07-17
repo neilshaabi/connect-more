@@ -2,22 +2,23 @@
 
 module Board where
 
-import qualified Data.Map as Map
-import Data.Map (Map, (!))
 import Data.List (isSubsequenceOf)
+import Data.Map (Map, (!))
+
+import qualified Data.Map as Map
 
 -- | Position in a board represented as a (column, row) pair
 type Point = (Int,Int)
+
+-- | Representation of pieces to be added to board (also used to represent players)
+data Piece = None | Red | Blue
+    deriving (Show, Eq, Ord)
 
 -- | Represention of the board to which @Piece@s are added
 data Board = Board { pieces  :: Map Point Piece, -- ^ @Map@ storing the @Piece@ (value) at each @Point@ (key)
                      heights :: Map Int Int,     -- ^ @Map@ storing the height/number of pieces (value) in each column (key)
                      cols    :: Int,             -- ^ Number of columns
                      rows    :: Int }            -- ^ Number of rows
-
--- | Representation of pieces to be added to board (also used to represent players)
-data Piece = None | Red | Blue
-    deriving (Show, Eq, Ord)
 
 -- | Empty board (no pieces placed)
 emptyBoard :: Int -> Int -> Board
@@ -28,7 +29,7 @@ emptyBoard cols rows = Board {
     rows = rows
     }
 
--- | Initial score (all individual scores set to 0)
+-- | Initial score (all scores set to 0)
 initialScore :: Map Piece Int
 initialScore = Map.fromList [(piece, 0) | piece <- [None, Red, Blue]]
 
@@ -72,6 +73,6 @@ hasWon board@Board{..} win player = any (`isSubsequenceOf` occupied board player
                 -- Combine winning combinations for each direction into single list
                 verticalWins ++ horizontalWins ++ leftDiagWins ++ rightDiagWins
 
--- | Returns list of @Point@s occupied by a given @Piece@ in a given @Board@
+-- | Returns a list of @Point@s occupied by a given @Piece@ in a given @Board@
 occupied :: Board -> Piece -> [Point]
 occupied board player = Map.keys $ Map.filter (== player) (pieces board)

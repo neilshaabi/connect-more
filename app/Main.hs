@@ -6,10 +6,11 @@ import Graphics.Gloss hiding (Point)
 import Graphics.Gloss.Interface.IO.Game hiding (Point)
 import Data.Char (intToDigit, digitToInt)
 import Data.Map (Map, (!))
+
 import qualified Data.Map as Map
 
-import Config
 import Board
+import Config
 import Renders
 
 -- | Data type defining different game states/screens
@@ -60,7 +61,6 @@ main = play
 render :: World -> Picture
 render World{..} = 
     let
-        -- Maximum possible number of pieces in a row to win
         maxWin = min (cols board) (rows board)
     in 
         pictures $ case state of
@@ -73,7 +73,7 @@ render World{..} =
         Endgame -> renderEndgame score win board winner
 
 
--- | Updates current @World@ based on user interactions (key presses)
+-- | Updates the @World@ based on user interactions (key presses)
 handleInput :: Event -> World -> World
 
 -- Handles spacebar presses - starts new game
@@ -121,16 +121,17 @@ handleInput (EventKey (Char c) Down _ _) world@World{..} =
     let 
         cs = cols board
         rs = rows board
-    in case state of
+    in 
+        case state of
         Title   | c == 's'                                 -> world { state = SetCols }                     -- Go to settings menu
         Play    | c `elem` ['1'..(intToDigit cs)]          -> makeMove world (digitToInt c)                 -- Add piece to column entered
         SetCols | c `elem` ['3'..'9']                      -> world { state = SetRows,                      -- Move down to next setting
                                                                       board = emptyBoard (digitToInt c) rs, -- Set new number of columns
-                                                                      win   = win' win (digitToInt c) rs    -- Update pieces to win if necessary
+                                                                      win   = getWin win (digitToInt c) rs  -- Update pieces to win if necessary
                                                                     }
         SetRows | c `elem` ['3'..'9']                      -> world { state = SetWin,                       -- Move down to next option
                                                                       board = emptyBoard cs (digitToInt c), -- Set new number of rows
-                                                                      win   = win' win cs (digitToInt c)    -- Update pieces to win if necessary
+                                                                      win   = getWin win cs (digitToInt c)  -- Update pieces to win if necessary
                                                                     }
         SetWin  | c `elem` ['3'..(intToDigit $ min cs rs)] -> world { win   = digitToInt c }                -- Set new number pieces to win
         _       | c == 'h', state /= Help                  -> world { state = Help, prevState = state }     -- Show help menu
@@ -141,7 +142,8 @@ handleInput (EventKey (Char c) Down _ _) world@World{..} =
 -- Ignore any other inputs
 handleInput _ world = world
 
--- | Attempts to add a @Piece@ to the @Board@ at the given column number
+-- | Attempts to add a @Piece@ to the @Board@ stored in the @World@neilshaabi
+--   at the given column number
 makeMove :: World -> Int -> World
 makeMove world@World{..} col =
     let
@@ -154,7 +156,7 @@ makeMove world@World{..} col =
         else world
 
 
--- | Updates the current @World@ when a move is made
+-- | Updates the @World@ when a move is made
 update :: Float -> World -> World
 update 0 world@World{..}
 
@@ -173,14 +175,14 @@ update 0 world@World{..}
 update _ world = world
 
 
--- | Returns the @Board@ after removing the @Piece@ from a given @Point@
+-- | Returns the @Board@ after removing the @Piece@ at a given @Point@
 undoMove :: Board -> Point -> Board
 undoMove board@Board{..} coords = board {
     pieces  = Map.insert coords None pieces,            -- Remove @Piece@ at @Point@
     heights = Map.adjust (+ (-1)) (fst coords) heights  -- Decrement height of column
     }
 
--- | Limits the maximum number of pieces to win to the smallest @Board@ dimension
-win' :: Int -> Int -> Int -> Int
-win' currWin cols rows = if currWin > maxWin then maxWin else currWin
+-- | Restricts the maximum number of pieces to win to the smallest @Board@ dimension
+getWin :: Int -> Int -> Int -> Int
+getWin currWin cols rows = if currWin > maxWin then maxWin else currWin
     where maxWin = min cols rows
