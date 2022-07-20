@@ -184,5 +184,4 @@ undoMove board@Board{..} coords = board {
 
 -- | Restricts the maximum number of pieces to win to the smallest @Board@ dimension
 getWin :: Int -> Int -> Int -> Int
-getWin currWin cols rows = if currWin > maxWin then maxWin else currWin
-    where maxWin = min cols rows
+getWin currWin cols rows = min currWin (min cols rows)
