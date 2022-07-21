@@ -15,18 +15,19 @@ data Piece = None | Red | Blue
     deriving (Show, Eq, Ord)
 
 -- | Represention of the board to which @Piece@s are added
-data Board = Board { pieces  :: Map Point Piece, -- ^ @Map@ storing the @Piece@ (value) at each @Point@ (key)
-                     heights :: Map Int Int,     -- ^ @Map@ storing the height/number of pieces (value) in each column (key)
-                     cols    :: Int,             -- ^ Number of columns
-                     rows    :: Int }            -- ^ Number of rows
+data Board = Board { pieces  :: Map Point Piece -- ^ @Map@ storing the @Piece@ (value) at each @Point@ (key)
+                   , heights :: Map Int Int     -- ^ @Map@ storing the height/number of pieces (value) in each column (key)
+                   , cols    :: Int             -- ^ Number of columns
+                   , rows    :: Int             -- ^ Number of rows
+                   }
 
 -- | Empty board (no pieces placed)
 emptyBoard :: Int -> Int -> Board
-emptyBoard cols rows = Board {
-    pieces  = Map.fromList [((x,y), None) | x <- [1..cols], y <- [1..rows]],
-    heights = Map.fromList [(col,0) | col <- [1..cols]],
-    cols = cols,
-    rows = rows
+emptyBoard cols rows = Board 
+    { pieces  = Map.fromList [((x,y), None) | x <- [1..cols], y <- [1..rows]]
+    , heights = Map.fromList [(col,0) | col <- [1..cols]]
+    , cols    = cols
+    , rows    = rows
     }
 
 -- | Initial score (all scores set to 0)
@@ -45,11 +46,11 @@ opposite None = None
 
 -- | Updates a given @Board@ after adding a @Piece@ to a given @Point@
 updateBoard :: Board -> (Int,Int) -> Piece -> Board
-updateBoard Board{..} (col,row) player = Board {
-    pieces  = Map.insert (col,row) player pieces,
-    heights = Map.insert col row heights,
-    cols = cols,
-    rows = rows
+updateBoard Board{..} (col,row) player = Board 
+    { pieces  = Map.insert (col,row) player pieces
+    , heights = Map.insert col row heights
+    , cols = cols
+    , rows = rows
     }
 
 -- | Returns if a given @Board@ is full by checking if there are no unfilled columns
