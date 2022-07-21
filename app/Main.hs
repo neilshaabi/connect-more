@@ -142,7 +142,7 @@ handleInput (EventKey (Char c) Down _ _) world@World{..} =
 -- Ignore any other inputs
 handleInput _ world = world
 
--- | Attempts to add a @Piece@ to the @Board@ stored in the @World@neilshaabi
+-- | Attempts to add a @Piece@ to the @Board@ stored in the @World@
 --   at the given column number
 makeMove :: World -> Int -> World
 makeMove world@World{..} col =
