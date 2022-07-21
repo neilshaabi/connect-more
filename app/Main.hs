@@ -159,16 +159,16 @@ update :: Float -> World -> World
 update 0 world@World{..}
 
     -- Declare draw if the @Board@ is full (no unfilled columns)
-    | boardIsFull board       = world { screen  = Endgame,
+    | boardIsFull board       = world { screen = Endgame,
                                         score  = Map.adjust (+ 1) None score 
                                       }
     -- End the game if a player has won
-    | hasWon board win player = world { screen  = Endgame
+    | hasWon board win player = world { screen = Endgame
                                       , winner = player
                                       , score  = Map.adjust (+ 1) player score 
                                       }
     -- Continue playing the game, updating the next player
-    | otherwise               = world { screen  = Play
+    | otherwise               = world { screen = Play
                                       , player = opposite player
                                       }
 
